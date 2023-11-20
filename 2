@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+</head>
+<body>
+
+<?php
+$result = "";
+$error = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $number1 = $_POST["number1"];
+    $number2 = $_POST["number2"];
+    $operation = $_POST["operation"];
+
+    // Проверка вводимых данных
+    if (!is_numeric($number1) || !is_numeric($number2)) {
+        $error = "Пожалуйста, введите числовые значения.";
+    } else {
+        switch ($operation) {
+            case 'add':
+                $result = $number1 + $number2;
+                break;
+            case 'subtract':
+                $result = $number1 - $number2;
+                break;
+            case 'multiply':
+                $result = $number1 * $number2;
+                break;
+            case 'divide':
+                if ($number2 != 0) {
+                    $result = $number1 / $number2;
+                } else {
+                    $error = "Деление на ноль невозможно.";
+                }
+                break;
+            default:
+                $error = "Выберите операцию.";
+                break;
+        }
+    }
+}
+?>
+
+<h2>Калькулятор</h2>
+
+<form method="post">
+    <label for="number1">Введите первое число:</label>
+    <input type="text" id="number1" name="number1" value="<?php echo isset($_POST['number1']) ? $_POST['number1'] : ''; ?>" required>
+
+    <label for="number2">Введите второе число:</label>
+    <input type="text" id="number2" name="number2" value="<?php echo isset($_POST['number2']) ? $_POST['number2'] : ''; ?>" required>
+
+    <label for="operation">Выберите операцию:</label>
+    <select id="operation" name="operation" required>
+        <option value="add">Сложение (+)</option>
+        <option value="subtract">Вычитание (-)</option>
+        <option value="multiply">Умножение (*)</option>
+        <option value="divide">Деление (/)</option>
+    </select>
+
+    <button type="submit">Выполнить операцию</button>
+</form>
+
+<?php
+// Вывод результата или ошибки
+if ($result !== "") {
+    echo "<p>Результат: $result</p>";
+} elseif ($error !== "") {
+    echo "<p style='color: red;'>Ошибка: $error</p>";
+}
+?>
+
+</body>
+</html>
